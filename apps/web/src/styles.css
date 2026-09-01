@@ -1,0 +1,452 @@
+:root {
+  color-scheme: light;
+  --color-bg: #f5f6f8;
+  --color-surface: #ffffff;
+  --color-border: #dde1e6;
+  --color-text: #1c2530;
+  --color-text-muted: #5b6472;
+  --color-primary: #1c4e8a;
+  --color-primary-hover: #163f70;
+  --color-danger: #b3261e;
+  --color-danger-bg: #fdecea;
+  --radius: 8px;
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.app {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 48px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 28px;
+}
+
+.app-header h1 {
+  font-size: 1.4rem;
+  letter-spacing: -0.01em;
+}
+
+.app-nav {
+  display: flex;
+  gap: 4px;
+}
+
+.app-nav__link {
+  background: none;
+  border: none;
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.app-nav__link:hover {
+  background: var(--color-border);
+}
+
+.app-nav__link--active {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.app-nav__link--active:hover {
+  background: var(--color-primary-hover);
+}
+
+.page-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.button {
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  padding: 10px 18px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.button--primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.button--primary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.button--primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.button--secondary {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.button--secondary:hover {
+  background: var(--color-bg);
+}
+
+.button--link {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  padding: 4px 0;
+}
+
+.button--link:hover {
+  text-decoration: underline;
+}
+
+.search-form {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 480px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.field-row {
+  display: flex;
+  gap: 16px;
+}
+
+.field label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.field input,
+.field select {
+  padding: 9px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.status-message {
+  padding: 12px 16px;
+  border-radius: var(--radius);
+}
+
+.status-message--loading {
+  color: var(--color-text-muted);
+}
+
+.status-message--error {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+.empty-state {
+  color: var(--color-text-muted);
+}
+
+.fare-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fare-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.fare-card__summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fare-card__flight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.fare-card__cabin {
+  text-transform: capitalize;
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+
+.fare-card__times {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.fare-card__duration {
+  margin-left: 6px;
+}
+
+.fare-card__seats {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.fare-card__action {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.fare-card__price {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.quote-summary {
+  color: var(--color-text-muted);
+  margin-top: -8px;
+  margin-bottom: 20px;
+}
+
+.price-table {
+  width: 100%;
+  max-width: 520px;
+  border-collapse: collapse;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.price-table th,
+.price-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-top: 1px solid var(--color-border);
+  font-weight: 400;
+}
+
+.price-table tr:first-child th,
+.price-table tr:first-child td {
+  border-top: none;
+}
+
+.price-table td {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.price-table__reduction th,
+.price-table__reduction td {
+  color: var(--color-primary);
+  font-size: 0.9rem;
+}
+
+.price-table__subtotal th,
+.price-table__subtotal td {
+  font-weight: 500;
+}
+
+.price-table__note {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.price-table__payable th,
+.price-table__payable td {
+  font-weight: 700;
+  font-size: 1.05rem;
+  background: var(--color-bg);
+}
+
+.quote-expiry {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+}
+
+.confirmation {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 32px;
+  max-width: 520px;
+}
+
+.confirmation__label {
+  color: var(--color-text-muted);
+  margin: 0 0 4px;
+}
+
+.confirmation__reference {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin: 0 0 24px;
+}
+
+.confirmation__details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0 0 28px;
+}
+
+.confirmation__details div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid var(--color-border);
+  padding-top: 12px;
+}
+
+.confirmation__details dt {
+  color: var(--color-text-muted);
+}
+
+.confirmation__details dd {
+  margin: 0;
+  font-weight: 500;
+  text-align: right;
+}
+
+.confirmation__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.bookings-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.bookings-table th,
+.bookings-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-top: 1px solid var(--color-border);
+}
+
+.bookings-table thead th {
+  border-top: none;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 600px) {
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .field-row {
+    flex-direction: column;
+  }
+
+  .fare-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .fare-card__action {
+    justify-content: space-between;
+  }
+
+  .bookings-table {
+    display: block;
+    overflow-x: auto;
+  }
+}
