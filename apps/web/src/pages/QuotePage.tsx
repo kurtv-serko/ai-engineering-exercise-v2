@@ -51,6 +51,11 @@ export function QuotePage({ quote, onConfirmed, onBack }: QuotePageProps) {
         {quote.traveller.name}
       </p>
 
+      <p className="quote-gross">
+        Fare total before any discount{" "}
+        <strong>{formatMoney(quote.totalMinor, currency)}</strong>
+      </p>
+
       <table className="price-table">
         <tbody>
           <tr>
