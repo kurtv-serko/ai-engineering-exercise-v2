@@ -4,6 +4,7 @@ import type {
   BookingView,
   FareSearchQuery,
   FareView,
+  NetworkView,
   QuoteView,
   TravellerView,
 } from "@farepath/shared";
@@ -37,10 +38,11 @@ type Step =
 
 interface BookingFlowProps {
   travellers: TravellerView[];
+  network: NetworkView;
   onViewBookings: () => void;
 }
 
-export function BookingFlow({ travellers, onViewBookings }: BookingFlowProps) {
+export function BookingFlow({ travellers, network, onViewBookings }: BookingFlowProps) {
   const [step, setStep] = useState<Step>({ name: "search" });
   const [error, setError] = useState<string | null>(null);
 
@@ -88,7 +90,11 @@ export function BookingFlow({ travellers, onViewBookings }: BookingFlowProps) {
         <section>
           <h2>Search flights</h2>
           {error && <StatusMessage kind="error" message={error} />}
-          <SearchForm travellers={travellers} onSubmit={handleSearch} />
+          <SearchForm
+            travellers={travellers}
+            network={network}
+            onSubmit={handleSearch}
+          />
         </section>
       );
 

@@ -66,14 +66,29 @@ amount recorded on the quote rather than re-pricing the fare.
 
 ## Seeded data
 
-Flights run for the next 14 days on AKL→SYD, AKL→LAX, AKL→SIN, AKL→WLG and
-SYD→AKL, in a mix of cabins.
+Flights run for the **next 21 days** across a network of 17 airports and 42
+routes — 21 city pairs, each seeded in both directions — flown by seven
+carriers in a mix of cabins. `GET /api/network` returns the routes that
+actually have fares, which is what the search form uses to populate its
+dropdowns.
 
-Four travellers across three organisations, with different corporate rates:
+New Zealand domestic, trans-Tasman, Australian domestic, Pacific, Asia and long
+haul are all represented, and the **pass-through share deliberately varies by
+route**: on AKL→WLG, taxes and carrier fees are 20.00 of a 109.00 ticket; on
+AKL→LAX they are 260.00 of 680.00. That spread is why it matters which amount a
+discount is applied to.
 
-| Traveller       | Organisation      | Negotiated rate |
-| --------------- | ----------------- | --------------- |
-| Mereana Walker  | Kahu Logistics    | 12%             |
-| Daniel Okafor   | Kahu Logistics    | 12%             |
-| Priya Raman     | Northwind Freight | 5%              |
-| Sam Whitcombe   | Tuatara Studios   | none            |
+Six travellers across four organisations, with different corporate rates:
+
+| Traveller        | Organisation      | Negotiated rate |
+| ---------------- | ----------------- | --------------- |
+| Mereana Walker   | Kahu Logistics    | 12%             |
+| Daniel Okafor    | Kahu Logistics    | 12%             |
+| Priya Raman      | Northwind Freight | 5%              |
+| Tomás Ferreira   | Northwind Freight | 5%              |
+| Aroha Ngata      | Harbourline Legal | 7.5%            |
+| Sam Whitcombe    | Tuatara Studios   | none            |
+
+Routes are defined once in `packages/db/src/seed.ts` and mirrored automatically
+for the return leg: the flight number gains one and the departure moves twelve
+hours, as a real aircraft rotation would.

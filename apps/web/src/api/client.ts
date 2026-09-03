@@ -12,6 +12,7 @@ import type {
   CreateQuoteRequest,
   FareSearchQuery,
   FareView,
+  NetworkView,
   QuoteView,
   TravellerView,
 } from "@farepath/shared";
@@ -44,6 +45,10 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   }
 
   return response.json() as Promise<T>;
+}
+
+export function fetchNetwork(): Promise<NetworkView> {
+  return request<NetworkView>("/api/network");
 }
 
 export function fetchTravellers(): Promise<TravellerView[]> {

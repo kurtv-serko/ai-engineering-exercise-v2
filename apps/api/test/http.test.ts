@@ -29,6 +29,34 @@ describe("GET /api/health", () => {
   });
 });
 
+describe("GET /api/network", () => {
+  it("lists only routes that have fares", async () => {
+    const res = await app.inject({ method: "GET", url: "/api/network" });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.json().routes).toEqual([
+      { origin: "AKL", destination: "LAX" },
+      { origin: "AKL", destination: "SIN" },
+      { origin: "AKL", destination: "WLG" },
+    ]);
+  });
+
+  it("lists only airports those routes touch, with their cities", async () => {
+    const res = await app.inject({ method: "GET", url: "/api/network" });
+
+    const airports = res.json().airports;
+    expect(airports.map((a: { code: string }) => a.code).sort()).toEqual([
+      "AKL",
+      "LAX",
+      "SIN",
+      "WLG",
+    ]);
+    expect(airports.find((a: { code: string }) => a.code === "AKL").city).toBe(
+      "Auckland",
+    );
+  });
+});
+
 describe("GET /api/travellers", () => {
   it("includes the organisation and its negotiated rate", async () => {
     const res = await app.inject({ method: "GET", url: "/api/travellers" });

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { fetchTravellers } from "./api/client.js";
+import { fetchNetwork, fetchTravellers } from "./api/client.js";
 import { StatusMessage } from "./components/StatusMessage.js";
 import { useAsync } from "./hooks/useAsync.js";
 import { BookingFlow } from "./pages/BookingFlow.js";
@@ -11,6 +11,7 @@ type View = "book" | "bookings";
 export function App() {
   const [view, setView] = useState<View>("book");
   const travellersState = useAsync(fetchTravellers, []);
+  const networkState = useAsync(fetchNetwork, []);
 
   return (
     <div className="app">
@@ -39,13 +40,16 @@ export function App() {
       <main className="app-main">
         {view === "bookings" ? (
           <BookingsPage />
-        ) : travellersState.status === "loading" ? (
+        ) : travellersState.status === "loading" || networkState.status === "loading" ? (
           <StatusMessage kind="loading" />
         ) : travellersState.status === "error" ? (
           <StatusMessage kind="error" message={travellersState.message} />
+        ) : networkState.status === "error" ? (
+          <StatusMessage kind="error" message={networkState.message} />
         ) : (
           <BookingFlow
             travellers={travellersState.data}
+            network={networkState.data}
             onViewBookings={() => setView("bookings")}
           />
         )}

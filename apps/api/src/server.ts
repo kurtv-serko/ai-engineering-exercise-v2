@@ -5,7 +5,7 @@
  * in-memory one. Nothing in here reaches for a global connection.
  */
 
-import { organisations, travellers, type Db } from "@farepath/db";
+import { AIRPORTS, fares, organisations, travellers, type Db } from "@farepath/db";
 import cors from "@fastify/cors";
 import { eq } from "drizzle-orm";
 import Fastify, { type FastifyInstance } from "fastify";
@@ -59,6 +59,25 @@ export function buildServer({ db, logger = false }: BuildServerOptions): Fastify
   });
 
   app.get("/api/health", async () => ({ status: "ok" }));
+
+  app.get("/api/network", async () => {
+    const routes = db
+      .selectDistinct({ origin: fares.origin, destination: fares.destination })
+      .from(fares)
+      .all()
+      .sort(
+        (a, b) =>
+          a.origin.localeCompare(b.origin) ||
+          a.destination.localeCompare(b.destination),
+      );
+
+    const served = new Set(routes.flatMap((r) => [r.origin, r.destination]));
+
+    return {
+      airports: AIRPORTS.filter((airport) => served.has(airport.code)),
+      routes,
+    };
+  });
 
   app.get("/api/travellers", async () => {
     const rows = db

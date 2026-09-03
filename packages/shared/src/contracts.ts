@@ -10,6 +10,24 @@ export type Cabin = "economy" | "premium" | "business";
 
 export type BookingStatus = "confirmed";
 
+export interface AirportView {
+  code: string;
+  city: string;
+  country: string;
+}
+
+/** One direction of one route. */
+export interface RoutePairView {
+  origin: string;
+  destination: string;
+}
+
+/** Everything the search form needs to offer only routes that exist. */
+export interface NetworkView {
+  airports: AirportView[];
+  routes: RoutePairView[];
+}
+
 export interface OrganisationView {
   id: string;
   name: string;

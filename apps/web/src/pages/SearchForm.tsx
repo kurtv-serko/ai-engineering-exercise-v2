@@ -1,7 +1,13 @@
-import { useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 
-import type { Cabin, FareSearchQuery, TravellerView } from "@farepath/shared";
+import type {
+  Cabin,
+  FareSearchQuery,
+  NetworkView,
+  TravellerView,
+} from "@farepath/shared";
 
+/** Far enough out that the seeded schedule always has departures. */
 function defaultDepartureDate(): string {
   const date = new Date();
   date.setDate(date.getDate() + 3);
@@ -10,6 +16,10 @@ function defaultDepartureDate(): string {
 
 const CABINS: Cabin[] = ["economy", "premium", "business"];
 
+function titleCase(value: string): string {
+  return `${value[0]?.toUpperCase() ?? ""}${value.slice(1)}`;
+}
+
 export interface SearchFormValues {
   travellerId: string;
   query: FareSearchQuery;
@@ -17,23 +27,72 @@ export interface SearchFormValues {
 
 interface SearchFormProps {
   travellers: TravellerView[];
+  network: NetworkView;
   onSubmit: (values: SearchFormValues) => void;
 }
 
-export function SearchForm({ travellers, onSubmit }: SearchFormProps) {
+export function SearchForm({ travellers, network, onSubmit }: SearchFormProps) {
   const [travellerId, setTravellerId] = useState(travellers[0]?.id ?? "");
-  const [origin, setOrigin] = useState("AKL");
-  const [destination, setDestination] = useState("LAX");
   const [date, setDate] = useState(defaultDepartureDate);
   const [cabin, setCabin] = useState<Cabin | "">("");
+
+  const label = useMemo(() => {
+    const byCode = new Map(network.airports.map((a) => [a.code, a]));
+    return (code: string) => {
+      const airport = byCode.get(code);
+      return airport ? `${airport.city} (${airport.code})` : code;
+    };
+  }, [network.airports]);
+
+  /** Only offer destinations actually served from the chosen origin. */
+  const destinationsByOrigin = useMemo(() => {
+    const map = new Map<string, string[]>();
+    for (const route of network.routes) {
+      const existing = map.get(route.origin);
+      if (existing) {
+        existing.push(route.destination);
+      } else {
+        map.set(route.origin, [route.destination]);
+      }
+    }
+    return map;
+  }, [network.routes]);
+
+  const origins = useMemo(
+    () => [...destinationsByOrigin.keys()].sort((a, b) => label(a).localeCompare(label(b))),
+    [destinationsByOrigin, label],
+  );
+
+  const [origin, setOrigin] = useState(origins.includes("AKL") ? "AKL" : (origins[0] ?? ""));
+
+  const destinations = useMemo(() => {
+    const options = destinationsByOrigin.get(origin) ?? [];
+    return [...options].sort((a, b) => label(a).localeCompare(label(b)));
+  }, [destinationsByOrigin, origin, label]);
+
+  const [destination, setDestination] = useState("LAX");
+
+  // Changing origin can strand the chosen destination on a route that does not
+  // exist, so fall back to the first one that does.
+  const effectiveDestination = destinations.includes(destination)
+    ? destination
+    : (destinations[0] ?? "");
+
+  function handleOriginChange(next: string) {
+    setOrigin(next);
+    const served = destinationsByOrigin.get(next) ?? [];
+    if (!served.includes(destination)) {
+      setDestination(served[0] ?? "");
+    }
+  }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     onSubmit({
       travellerId,
       query: {
-        origin: origin.toUpperCase(),
-        destination: destination.toUpperCase(),
+        origin,
+        destination: effectiveDestination,
         date,
         ...(cabin ? { cabin } : {}),
       },
@@ -60,27 +119,35 @@ export function SearchForm({ travellers, onSubmit }: SearchFormProps) {
 
       <div className="field-row">
         <div className="field">
-          <label htmlFor="origin">Origin</label>
-          <input
+          <label htmlFor="origin">From</label>
+          <select
             id="origin"
             value={origin}
-            onChange={(e) => setOrigin(e.target.value)}
-            maxLength={3}
-            minLength={3}
+            onChange={(e) => handleOriginChange(e.target.value)}
             required
-          />
+          >
+            {origins.map((code) => (
+              <option key={code} value={code}>
+                {label(code)}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="field">
-          <label htmlFor="destination">Destination</label>
-          <input
+          <label htmlFor="destination">To</label>
+          <select
             id="destination"
-            value={destination}
+            value={effectiveDestination}
             onChange={(e) => setDestination(e.target.value)}
-            maxLength={3}
-            minLength={3}
             required
-          />
+          >
+            {destinations.map((code) => (
+              <option key={code} value={code}>
+                {label(code)}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
@@ -98,12 +165,15 @@ export function SearchForm({ travellers, onSubmit }: SearchFormProps) {
 
         <div className="field">
           <label htmlFor="cabin">Cabin</label>
-          <select id="cabin" value={cabin} onChange={(e) => setCabin(e.target.value as Cabin | "")}>
+          <select
+            id="cabin"
+            value={cabin}
+            onChange={(e) => setCabin(e.target.value as Cabin | "")}
+          >
             <option value="">Any</option>
             {CABINS.map((c) => (
               <option key={c} value={c}>
-                {c[0]?.toUpperCase()}
-                {c.slice(1)}
+                {titleCase(c)}
               </option>
             ))}
           </select>
