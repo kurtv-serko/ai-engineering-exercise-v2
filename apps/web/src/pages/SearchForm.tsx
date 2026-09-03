@@ -7,10 +7,15 @@ import type {
   TravellerView,
 } from "@farepath/shared";
 
-/** Far enough out that the seeded schedule always has departures. */
+/**
+ * Far enough out that the seeded schedule always has departures.
+ *
+ * The schedule starts eight days ahead, so anything sooner than that finds
+ * nothing.
+ */
 function defaultDepartureDate(): string {
   const date = new Date();
-  date.setDate(date.getDate() + 3);
+  date.setDate(date.getDate() + 10);
   return date.toISOString().slice(0, 10);
 }
 

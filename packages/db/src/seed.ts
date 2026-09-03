@@ -341,7 +341,14 @@ function reverseOf(route: Route): Route {
   };
 }
 
-/** Flights are seeded for this many days, starting tomorrow. */
+/**
+ * The booking window: flights run from this many days out, for this many days.
+ *
+ * The schedule deliberately starts a week ahead rather than tomorrow, which is
+ * roughly how far out corporate travel is actually booked. Searching inside the
+ * next week returns nothing.
+ */
+const SCHEDULE_STARTS_IN_DAYS = 8;
 const DAYS_OF_SCHEDULE = 21;
 
 const CURRENCY: Currency = "NZD";
@@ -424,7 +431,10 @@ export function seed(db: Db): void {
     .run();
 
   const fareRows = [];
-  for (let day = 1; day <= DAYS_OF_SCHEDULE; day += 1) {
+  const firstDay = SCHEDULE_STARTS_IN_DAYS;
+  const lastDay = SCHEDULE_STARTS_IN_DAYS + DAYS_OF_SCHEDULE - 1;
+
+  for (let day = firstDay; day <= lastDay; day += 1) {
     const date = isoDayOffset(day);
     for (const route of allRoutes()) {
       for (const service of route.services) {

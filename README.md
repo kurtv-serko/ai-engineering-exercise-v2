@@ -66,11 +66,16 @@ amount recorded on the quote rather than re-pricing the fare.
 
 ## Seeded data
 
-Flights run for the **next 21 days** across a network of 17 airports and 42
-routes — 21 city pairs, each seeded in both directions — flown by seven
-carriers in a mix of cabins. `GET /api/network` returns the routes that
-actually have fares, which is what the search form uses to populate its
-dropdowns.
+The network is 17 airports and 42 routes: 21 city pairs, each seeded in both
+directions, flown by seven carriers in a mix of cabins.
+
+**The booking window opens a week out and runs for 21 days**, which is roughly
+the lead time corporate travel is booked at. Searching inside the next seven
+days finds nothing, so the search form defaults to ten days ahead.
+
+`GET /api/network` returns only the routes that actually have fares, and the
+search form uses it to populate its dropdowns — so you cannot pick a city pair
+that does not exist.
 
 New Zealand domestic, trans-Tasman, Australian domestic, Pacific, Asia and long
 haul are all represented, and the **pass-through share deliberately varies by
