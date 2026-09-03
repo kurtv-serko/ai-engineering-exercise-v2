@@ -1,38 +1,38 @@
 import { describe, expect, it } from "vitest";
 
-import { clampToZero, formatMoney, percentageOf } from "../src/money.js";
+import { clampToZero, formatMoney, percentOf, roundMoney } from "../src/money.js";
 
-describe("percentageOf", () => {
-  it("computes basis points of an amount", () => {
-    expect(percentageOf(42_000, 1_200)).toBe(5_040);
-    expect(percentageOf(10_000, 250)).toBe(250);
+describe("roundMoney", () => {
+  it("rounds to the nearest cent", () => {
+    expect(roundMoney(50.400000000000006)).toBe(50.4);
+    expect(roundMoney(1 / 3)).toBe(0.33);
   });
 
-  it("rounds half up", () => {
-    // 8900 * 700 / 10000 = 623.0
-    expect(percentageOf(8_900, 700)).toBe(623);
-    // 1 * 5000 / 10000 = 0.5, rounds up.
-    expect(percentageOf(1, 5_000)).toBe(1);
-    // 1 * 4999 / 10000 = 0.4999, rounds down.
-    expect(percentageOf(1, 4_999)).toBe(0);
+  it("leaves an amount already at cent precision alone", () => {
+    expect(roundMoney(420)).toBe(420);
+    expect(roundMoney(86.5)).toBe(86.5);
+  });
+});
+
+describe("percentOf", () => {
+  it("computes a percentage of an amount", () => {
+    expect(percentOf(420, 12)).toBe(50.4);
+    expect(percentOf(100, 2.5)).toBe(2.5);
+  });
+
+  it("rounds the result to the nearest cent", () => {
+    expect(percentOf(89, 7)).toBe(6.23);
   });
 
   it("returns zero for a zero rate", () => {
-    expect(percentageOf(42_000, 0)).toBe(0);
+    expect(percentOf(420, 0)).toBe(0);
   });
 
-  it("always returns an integer", () => {
-    for (const bps of [1, 37, 333, 1_234, 9_999]) {
-      expect(Number.isInteger(percentageOf(51_137, bps))).toBe(true);
+  it("never returns more decimal places than a cent", () => {
+    for (const percent of [1, 3.7, 33.3, 12.34, 99.99]) {
+      const result = percentOf(511.37, percent);
+      expect(roundMoney(result)).toBe(result);
     }
-  });
-
-  it("rejects a negative rate", () => {
-    expect(() => percentageOf(42_000, -1)).toThrow(RangeError);
-  });
-
-  it("rejects a non-integer amount, which would mean a float leaked in", () => {
-    expect(() => percentageOf(420.5, 1_200)).toThrow(TypeError);
   });
 });
 
@@ -47,8 +47,8 @@ describe("clampToZero", () => {
 });
 
 describe("formatMoney", () => {
-  it("renders minor units as a currency amount", () => {
-    expect(formatMoney(62_960, "NZD")).toContain("629.60");
+  it("renders a decimal amount as a currency string", () => {
+    expect(formatMoney(629.6, "NZD")).toContain("629.60");
   });
 
   it("renders zero", () => {

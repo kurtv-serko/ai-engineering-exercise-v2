@@ -18,18 +18,18 @@ import type { PricedItinerary } from "../../src/domain/pricing/rules.js";
  */
 export function longHaul(): PricedItinerary {
   return {
-    baseFareMinor: 42_000,
-    taxesMinor: 18_600,
-    carrierFeesMinor: 7_400,
+    baseFare: 420,
+    taxes: 186,
+    carrierFees: 74,
   };
 }
 
 /** A domestic hop. Small base fare, small pass-through. */
 export function domestic(): PricedItinerary {
   return {
-    baseFareMinor: 8_900,
-    taxesMinor: 1_100,
-    carrierFeesMinor: 900,
+    baseFare: 89,
+    taxes: 11,
+    carrierFees: 9,
   };
 }
 
@@ -44,8 +44,8 @@ export function domestic(): PricedItinerary {
  */
 export function taxFree(): PricedItinerary {
   return {
-    baseFareMinor: 20_000,
-    taxesMinor: 0,
-    carrierFeesMinor: 0,
+    baseFare: 200,
+    taxes: 0,
+    carrierFees: 0,
   };
 }

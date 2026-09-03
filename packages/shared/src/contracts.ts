@@ -1,7 +1,8 @@
 /**
  * Wire contracts shared by the API and the web client.
  *
- * All amounts are integer minor units in the accompanying `currency`.
+ * All amounts are decimal amounts in the accompanying `currency`, e.g. `420` is
+ * four hundred and twenty dollars.
  */
 
 import type { CurrencyCode } from "./money.js";
@@ -31,8 +32,8 @@ export interface NetworkView {
 export interface OrganisationView {
   id: string;
   name: string;
-  /** Negotiated corporate discount, in basis points, applied to every quote. */
-  negotiatedDiscountBps: number;
+  /** Negotiated corporate discount, as a plain percentage, applied to every quote. */
+  negotiatedDiscountPercent: number;
 }
 
 export interface TravellerView {
@@ -53,11 +54,11 @@ export interface FareView {
   arriveAt: string;
   cabin: Cabin;
   currency: CurrencyCode;
-  baseFareMinor: number;
-  taxesMinor: number;
-  carrierFeesMinor: number;
-  /** baseFareMinor + taxesMinor + carrierFeesMinor. */
-  totalMinor: number;
+  baseFare: number;
+  taxes: number;
+  carrierFees: number;
+  /** baseFare + taxes + carrierFees. */
+  total: number;
   seatsAvailable: number;
 }
 
@@ -66,15 +67,15 @@ export interface QuoteView {
   fare: FareView;
   traveller: TravellerView;
   currency: CurrencyCode;
-  baseFareMinor: number;
-  taxesMinor: number;
-  carrierFeesMinor: number;
+  baseFare: number;
+  taxes: number;
+  carrierFees: number;
   /** Gross of any reduction. */
-  totalMinor: number;
+  total: number;
   /** Corporate negotiated rate. Reduces the base fare only — see invariant D1. */
-  negotiatedReductionMinor: number;
+  negotiatedReduction: number;
   /** What the traveller actually pays. */
-  payableMinor: number;
+  payable: number;
   createdAt: string;
   expiresAt: string;
 }
@@ -84,7 +85,7 @@ export interface BookingView {
   reference: string;
   status: BookingStatus;
   currency: CurrencyCode;
-  payableMinor: number;
+  payable: number;
   confirmedAt: string;
   travellerName: string;
   fare: FareView;

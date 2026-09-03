@@ -42,7 +42,7 @@ export function BookingsPage() {
                   </td>
                   <td>{formatDate(booking.fare.departAt)}</td>
                   <td>{booking.travellerName}</td>
-                  <td>{formatMoney(booking.payableMinor, booking.currency)}</td>
+                  <td>{formatMoney(booking.payable, booking.currency)}</td>
                 </tr>
               ))}
             </tbody>

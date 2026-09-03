@@ -17,10 +17,10 @@ export function toFareView(fare: FareRow): FareView {
     arriveAt: fare.arriveAt,
     cabin: fare.cabin,
     currency: fare.currency,
-    baseFareMinor: fare.baseFareMinor,
-    taxesMinor: fare.taxesMinor,
-    carrierFeesMinor: fare.carrierFeesMinor,
-    totalMinor: grossTotal(fare),
+    baseFare: fare.baseFare,
+    taxes: fare.taxes,
+    carrierFees: fare.carrierFees,
+    total: grossTotal(fare),
     seatsAvailable: fare.seatsAvailable,
   };
 }
@@ -29,7 +29,7 @@ export function toOrganisationView(organisation: OrganisationRow): OrganisationV
   return {
     id: organisation.id,
     name: organisation.name,
-    negotiatedDiscountBps: organisation.negotiatedDiscountBps,
+    negotiatedDiscountPercent: organisation.negotiatedDiscountPercent,
   };
 }
 
@@ -56,12 +56,12 @@ export function toQuoteView(
     fare: toFareView(fare),
     traveller: toTravellerView(traveller, organisation),
     currency: quote.currency,
-    baseFareMinor: quote.baseFareMinor,
-    taxesMinor: quote.taxesMinor,
-    carrierFeesMinor: quote.carrierFeesMinor,
-    totalMinor: grossTotal(quote),
-    negotiatedReductionMinor: quote.negotiatedReductionMinor,
-    payableMinor: quote.payableMinor,
+    baseFare: quote.baseFare,
+    taxes: quote.taxes,
+    carrierFees: quote.carrierFees,
+    total: grossTotal(quote),
+    negotiatedReduction: quote.negotiatedReduction,
+    payable: quote.payable,
     createdAt: quote.createdAt,
     expiresAt: quote.expiresAt,
   };
@@ -77,7 +77,7 @@ export function toBookingView(
     reference: booking.reference,
     status: booking.status,
     currency: booking.currency,
-    payableMinor: booking.payableMinor,
+    payable: booking.payable,
     confirmedAt: booking.confirmedAt,
     travellerName,
     fare: toFareView(fare),

@@ -5,7 +5,7 @@ import type { BookingView, QuoteView } from "@farepath/shared";
 
 import { confirmBooking } from "../api/client.js";
 import { describeError } from "../hooks/useAsync.js";
-import { formatBps, formatDateTime } from "../format.js";
+import { formatPercent, formatDateTime } from "../format.js";
 import { StatusMessage } from "../components/StatusMessage.js";
 
 interface QuotePageProps {
@@ -32,10 +32,10 @@ export function QuotePage({ quote, onConfirmed, onBack }: QuotePageProps) {
 
   const { fare, currency } = quote;
   const { organisation } = quote.traveller;
-  const hasCorporateRate = quote.negotiatedReductionMinor > 0;
+  const hasCorporateRate = quote.negotiatedReduction > 0;
   // The corporate rate comes off the base fare, so the running total the
   // traveller sees is the discounted base plus the untouched pass-through.
-  const discountedBaseMinor = quote.baseFareMinor - quote.negotiatedReductionMinor;
+  const discountedBase = quote.baseFare - quote.negotiatedReduction;
 
   return (
     <section>
@@ -53,28 +53,28 @@ export function QuotePage({ quote, onConfirmed, onBack }: QuotePageProps) {
 
       <p className="quote-gross">
         Fare total before any discount{" "}
-        <strong>{formatMoney(quote.totalMinor, currency)}</strong>
+        <strong>{formatMoney(quote.total, currency)}</strong>
       </p>
 
       <table className="price-table">
         <tbody>
           <tr>
             <th scope="row">Base fare</th>
-            <td>{formatMoney(quote.baseFareMinor, currency)}</td>
+            <td>{formatMoney(quote.baseFare, currency)}</td>
           </tr>
           {hasCorporateRate && (
             <>
               <tr className="price-table__reduction">
                 <th scope="row">
                   {organisation.name} corporate rate{" "}
-                  {formatBps(organisation.negotiatedDiscountBps)}
+                  {formatPercent(organisation.negotiatedDiscountPercent)}
                   <span className="price-table__note">applies to the base fare only</span>
                 </th>
-                <td>−{formatMoney(quote.negotiatedReductionMinor, currency)}</td>
+                <td>−{formatMoney(quote.negotiatedReduction, currency)}</td>
               </tr>
               <tr className="price-table__subtotal">
                 <th scope="row">Base fare after corporate rate</th>
-                <td>{formatMoney(discountedBaseMinor, currency)}</td>
+                <td>{formatMoney(discountedBase, currency)}</td>
               </tr>
             </>
           )}
@@ -83,18 +83,18 @@ export function QuotePage({ quote, onConfirmed, onBack }: QuotePageProps) {
               Taxes
               <span className="price-table__note">passed through in full</span>
             </th>
-            <td>{formatMoney(quote.taxesMinor, currency)}</td>
+            <td>{formatMoney(quote.taxes, currency)}</td>
           </tr>
           <tr>
             <th scope="row">
               Carrier fees
               <span className="price-table__note">passed through in full</span>
             </th>
-            <td>{formatMoney(quote.carrierFeesMinor, currency)}</td>
+            <td>{formatMoney(quote.carrierFees, currency)}</td>
           </tr>
           <tr className="price-table__payable">
             <th scope="row">Payable total</th>
-            <td>{formatMoney(quote.payableMinor, currency)}</td>
+            <td>{formatMoney(quote.payable, currency)}</td>
           </tr>
         </tbody>
       </table>

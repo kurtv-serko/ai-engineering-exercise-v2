@@ -65,7 +65,7 @@ describe("GET /api/travellers", () => {
     const withDeal = res
       .json()
       .find((t: { id: string }) => t.id === IDS.travellerWithDeal);
-    expect(withDeal.organisation.negotiatedDiscountBps).toBe(1_200);
+    expect(withDeal.organisation.negotiatedDiscountPercent).toBe(12);
   });
 });
 
@@ -78,7 +78,7 @@ describe("GET /api/fares", () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.json()).toHaveLength(1);
-    expect(res.json()[0].totalMinor).toBe(68_000);
+    expect(res.json()[0].total).toBe(680);
   });
 
   it("rejects a malformed date", async () => {
@@ -111,9 +111,9 @@ describe("POST /api/quotes", () => {
 
     expect(res.statusCode).toBe(201);
     const quote = res.json();
-    expect(quote.totalMinor).toBe(68_000);
-    expect(quote.negotiatedReductionMinor).toBe(5_040);
-    expect(quote.payableMinor).toBe(62_960);
+    expect(quote.total).toBe(680);
+    expect(quote.negotiatedReduction).toBe(50.4);
+    expect(quote.payable).toBe(629.6);
   });
 
   it("404s an unknown fare", async () => {
@@ -161,7 +161,7 @@ describe("booking round trip", () => {
 
     expect(bookingRes.statusCode).toBe(201);
     const booking = bookingRes.json();
-    expect(booking.payableMinor).toBe(quote.payableMinor);
+    expect(booking.payable).toBe(quote.payable);
     expect(booking.travellerName).toBe("Mereana Walker");
     expect(booking.fare.flightNumber).toBe("NZ2");
   });

@@ -70,7 +70,7 @@ export async function confirmBooking(db: Db, input: ConfirmBookingInput) {
     quoteId: quote.id,
     status: "confirmed" as const,
     currency: quote.currency,
-    payableMinor: quote.payableMinor,
+    payable: quote.payable,
     confirmedAt: now.toISOString(),
   };
 

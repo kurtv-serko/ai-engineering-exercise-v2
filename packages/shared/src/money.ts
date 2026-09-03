@@ -1,13 +1,17 @@
 /**
  * Money primitives.
  *
- * Every amount in this service is an integer count of minor units (cents,
- * pence). Floats are banned throughout the pricing path: once rounding drift
- * reaches the ledger it cannot be reconciled against the card settlement file.
+ * Every amount in this service is a decimal number of dollars (or the
+ * equivalent major unit for the currency): `420` is four hundred and twenty
+ * dollars, not cents. That means ordinary float arithmetic, and float
+ * arithmetic drifts — `420 * 0.12` is `50.400000000000006`, not `50.4`.
  *
- * Concretely, that means no `/`, no `*` by a fractional factor, and no
- * `Number.prototype.toFixed` on an amount. Use the helpers below, which stay in
- * integer arithmetic from end to end.
+ * The fix is not to avoid floats, it is to never let the drift accumulate:
+ * every computed amount is rounded to the nearest cent immediately, with
+ * `roundMoney()`, before it is stored, compared, or used in a further
+ * calculation. As long as every arithmetic step rounds its own result, drift
+ * never has anywhere to build up. Use the helpers below rather than doing the
+ * rounding by hand.
  */
 
 export type CurrencyCode = "NZD" | "AUD" | "USD" | "GBP";
@@ -19,34 +23,30 @@ export class CurrencyMismatchError extends Error {
   }
 }
 
+/** Round an amount to the nearest cent. Call this after every arithmetic step. */
+export function roundMoney(amount: number): number {
+  return Math.round(amount * 100) / 100;
+}
+
 /**
- * Return `basisPoints` hundredths of a percent of `amountMinor`.
+ * `percent` percent of `amount`, rounded to the nearest cent.
  *
- * Rounds half up and stays in integer arithmetic throughout. 250 basis points
- * is 2.5%.
+ * 12 is 12%. The result is rounded immediately, so it is safe to feed into a
+ * further calculation without drift accumulating.
  */
-export function percentageOf(amountMinor: number, basisPoints: number): number {
-  if (!Number.isInteger(amountMinor)) {
-    throw new TypeError("amountMinor must be an integer count of minor units");
-  }
-  if (!Number.isInteger(basisPoints)) {
-    throw new TypeError("basisPoints must be an integer");
-  }
-  if (basisPoints < 0) {
-    throw new RangeError("basisPoints must not be negative");
-  }
-  return Math.floor((amountMinor * basisPoints + 5_000) / 10_000);
+export function percentOf(amount: number, percent: number): number {
+  return roundMoney((amount * percent) / 100);
 }
 
 /** A payable amount is never negative. */
-export function clampToZero(amountMinor: number): number {
-  return Math.max(amountMinor, 0);
+export function clampToZero(amount: number): number {
+  return Math.max(amount, 0);
 }
 
 /** Display only. Never feed the result of this back into a calculation. */
-export function formatMoney(amountMinor: number, currency: CurrencyCode): string {
+export function formatMoney(amount: number, currency: CurrencyCode): string {
   return new Intl.NumberFormat("en-NZ", {
     style: "currency",
     currency,
-  }).format(amountMinor / 100);
+  }).format(amount);
 }

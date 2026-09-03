@@ -48,7 +48,7 @@ export function FareResults({ query, fares, onSelect, onBack }: FareResultsProps
 
               <div className="fare-card__action">
                 <span className="fare-card__price">
-                  {formatMoney(fare.totalMinor, fare.currency)}
+                  {formatMoney(fare.total, fare.currency)}
                 </span>
                 <button
                   type="button"

@@ -1,19 +1,21 @@
 /**
  * Database schema.
  *
- * Money columns are integer minor units. SQLite has no decimal type and we do
- * not want one — see the note on floats in `@farepath/shared/money`.
+ * Money columns are decimal dollars, stored as REAL. Every computed amount is
+ * rounded to the nearest cent before it is written — see the note at the top
+ * of `@farepath/shared/money` — so no column here ever needs more precision
+ * than that.
  *
  * The physical tables are created by `schema.sql`, which is applied on every
  * `pnpm db:reset`. If you add a column here, add it there too.
  */
 
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 
 export const organisations = sqliteTable("organisations", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
-  negotiatedDiscountBps: integer("negotiated_discount_bps").notNull().default(0),
+  negotiatedDiscountPercent: real("negotiated_discount_percent").notNull().default(0),
 });
 
 export const travellers = sqliteTable("travellers", {
@@ -36,9 +38,9 @@ export const fares = sqliteTable("fares", {
   arriveAt: text("arrive_at").notNull(),
   cabin: text("cabin").$type<"economy" | "premium" | "business">().notNull(),
   currency: text("currency").$type<"NZD" | "AUD" | "USD" | "GBP">().notNull(),
-  baseFareMinor: integer("base_fare_minor").notNull(),
-  taxesMinor: integer("taxes_minor").notNull(),
-  carrierFeesMinor: integer("carrier_fees_minor").notNull(),
+  baseFare: real("base_fare").notNull(),
+  taxes: real("taxes").notNull(),
+  carrierFees: real("carrier_fees").notNull(),
   seatsAvailable: integer("seats_available").notNull(),
 });
 
@@ -51,11 +53,11 @@ export const quotes = sqliteTable("quotes", {
     .notNull()
     .references(() => travellers.id),
   currency: text("currency").$type<"NZD" | "AUD" | "USD" | "GBP">().notNull(),
-  baseFareMinor: integer("base_fare_minor").notNull(),
-  taxesMinor: integer("taxes_minor").notNull(),
-  carrierFeesMinor: integer("carrier_fees_minor").notNull(),
-  negotiatedReductionMinor: integer("negotiated_reduction_minor").notNull().default(0),
-  payableMinor: integer("payable_minor").notNull(),
+  baseFare: real("base_fare").notNull(),
+  taxes: real("taxes").notNull(),
+  carrierFees: real("carrier_fees").notNull(),
+  negotiatedReduction: real("negotiated_reduction").notNull().default(0),
+  payable: real("payable").notNull(),
   createdAt: text("created_at").notNull(),
   expiresAt: text("expires_at").notNull(),
 });
@@ -68,7 +70,7 @@ export const bookings = sqliteTable("bookings", {
     .references(() => quotes.id),
   status: text("status").$type<"confirmed">().notNull(),
   currency: text("currency").$type<"NZD" | "AUD" | "USD" | "GBP">().notNull(),
-  payableMinor: integer("payable_minor").notNull(),
+  payable: real("payable").notNull(),
   confirmedAt: text("confirmed_at").notNull(),
 });
 

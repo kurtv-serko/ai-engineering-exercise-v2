@@ -55,15 +55,15 @@ export async function createQuote(db: Db, input: CreateQuoteInput) {
   }
 
   const itinerary: PricedItinerary = {
-    baseFareMinor: fare.baseFareMinor,
-    taxesMinor: fare.taxesMinor,
-    carrierFeesMinor: fare.carrierFeesMinor,
+    baseFare: fare.baseFare,
+    taxes: fare.taxes,
+    carrierFees: fare.carrierFees,
   };
 
   // Contractual corporate rate. Applied first — see invariant D3 in
   // pricing/rules.ts. Note this reduces the base fare only.
-  const negotiated = negotiatedReduction(itinerary, organisation.negotiatedDiscountBps);
-  const payableMinor = applyReduction(itinerary, negotiated);
+  const negotiated = negotiatedReduction(itinerary, organisation.negotiatedDiscountPercent);
+  const payable = applyReduction(itinerary, negotiated);
 
   const expiresAt = new Date(now.getTime() + QUOTE_TTL_MINUTES * 60_000);
 
@@ -72,11 +72,11 @@ export async function createQuote(db: Db, input: CreateQuoteInput) {
     fareId: fare.id,
     travellerId: traveller.id,
     currency: fare.currency,
-    baseFareMinor: itinerary.baseFareMinor,
-    taxesMinor: itinerary.taxesMinor,
-    carrierFeesMinor: itinerary.carrierFeesMinor,
-    negotiatedReductionMinor: negotiated,
-    payableMinor,
+    baseFare: itinerary.baseFare,
+    taxes: itinerary.taxes,
+    carrierFees: itinerary.carrierFees,
+    negotiatedReduction: negotiated,
+    payable,
     createdAt: now.toISOString(),
     expiresAt: expiresAt.toISOString(),
   };
@@ -143,6 +143,6 @@ export function searchFares(db: Db, search: FareSearch) {
 }
 
 /** Convenience for callers that want the priced shape without the row noise. */
-export function itineraryOf(row: PricedItinerary): PricedItinerary & { totalMinor: number } {
-  return { ...row, totalMinor: grossTotal(row) };
+export function itineraryOf(row: PricedItinerary): PricedItinerary & { total: number } {
+  return { ...row, total: grossTotal(row) };
 }

@@ -47,10 +47,10 @@ packages/
 
 ## Things worth knowing
 
-**Money is always integer minor units.** Cents, never dollars; `4299`, never
-`42.99`. Floats are banned in the pricing path — see the note at the top of
-`packages/shared/src/money.ts`. Use the helpers there rather than doing
-arithmetic by hand.
+**Money is always decimal dollars.** `42.99`, never `4299`. That means float
+arithmetic, so every computed amount is rounded to the nearest cent
+immediately — see the note at the top of `packages/shared/src/money.ts`. Use
+the helpers there rather than doing arithmetic by hand.
 
 **The pricing invariants are documented, not implied.**
 `apps/api/src/domain/pricing/rules.ts` states what may be reduced and by how

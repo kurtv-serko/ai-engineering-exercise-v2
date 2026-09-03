@@ -57,7 +57,7 @@ interface Service {
   flightNumber: number;
   departHour: number;
   cabin: Cabin;
-  baseFareMinor: number;
+  baseFare: number;
   seatsAvailable: number;
 }
 
@@ -66,9 +66,9 @@ interface Route {
   destination: string;
   durationMinutes: number;
   /** Statutory taxes, per passenger. Pass-through, remitted in full. */
-  taxesMinor: number;
+  taxes: number;
   /** Carrier-imposed surcharges. Also pass-through. */
-  carrierFeesMinor: number;
+  carrierFees: number;
   services: Service[];
 }
 
@@ -92,42 +92,42 @@ const ROUTES: Route[] = [
     origin: "AKL",
     destination: "WLG",
     durationMinutes: 65,
-    taxesMinor: 1_100,
-    carrierFeesMinor: 900,
+    taxes: 11,
+    carrierFees: 9,
     services: [
-      { ...NZ, flightNumber: 431, departHour: 6, cabin: "economy", baseFareMinor: 8_900, seatsAvailable: 40 },
-      { ...JQ, flightNumber: 253, departHour: 16, cabin: "economy", baseFareMinor: 5_400, seatsAvailable: 55 },
+      { ...NZ, flightNumber: 431, departHour: 6, cabin: "economy", baseFare: 89, seatsAvailable: 40 },
+      { ...JQ, flightNumber: 253, departHour: 16, cabin: "economy", baseFare: 54, seatsAvailable: 55 },
     ],
   },
   {
     origin: "AKL",
     destination: "CHC",
     durationMinutes: 80,
-    taxesMinor: 1_100,
-    carrierFeesMinor: 900,
+    taxes: 11,
+    carrierFees: 9,
     services: [
-      { ...NZ, flightNumber: 501, departHour: 7, cabin: "economy", baseFareMinor: 9_600, seatsAvailable: 38 },
-      { ...NZ, flightNumber: 509, departHour: 17, cabin: "business", baseFareMinor: 24_500, seatsAvailable: 8 },
+      { ...NZ, flightNumber: 501, departHour: 7, cabin: "economy", baseFare: 96, seatsAvailable: 38 },
+      { ...NZ, flightNumber: 509, departHour: 17, cabin: "business", baseFare: 245, seatsAvailable: 8 },
     ],
   },
   {
     origin: "AKL",
     destination: "ZQN",
     durationMinutes: 105,
-    taxesMinor: 1_200,
-    carrierFeesMinor: 1_000,
+    taxes: 12,
+    carrierFees: 10,
     services: [
-      { ...NZ, flightNumber: 611, departHour: 8, cabin: "economy", baseFareMinor: 14_200, seatsAvailable: 26 },
+      { ...NZ, flightNumber: 611, departHour: 8, cabin: "economy", baseFare: 142, seatsAvailable: 26 },
     ],
   },
   {
     origin: "WLG",
     destination: "CHC",
     durationMinutes: 45,
-    taxesMinor: 900,
-    carrierFeesMinor: 800,
+    taxes: 9,
+    carrierFees: 8,
     services: [
-      { ...NZ, flightNumber: 421, departHour: 9, cabin: "economy", baseFareMinor: 7_200, seatsAvailable: 44 },
+      { ...NZ, flightNumber: 421, departHour: 9, cabin: "economy", baseFare: 72, seatsAvailable: 44 },
     ],
   },
 
@@ -136,43 +136,43 @@ const ROUTES: Route[] = [
     origin: "AKL",
     destination: "SYD",
     durationMinutes: 235,
-    taxesMinor: 8_650,
-    carrierFeesMinor: 3_200,
+    taxes: 86.5,
+    carrierFees: 32,
     services: [
-      { ...NZ, flightNumber: 103, departHour: 7, cabin: "economy", baseFareMinor: 24_900, seatsAvailable: 14 },
-      { ...NZ, flightNumber: 107, departHour: 14, cabin: "business", baseFareMinor: 98_000, seatsAvailable: 4 },
-      { ...QF, flightNumber: 142, departHour: 10, cabin: "economy", baseFareMinor: 22_400, seatsAvailable: 22 },
+      { ...NZ, flightNumber: 103, departHour: 7, cabin: "economy", baseFare: 249, seatsAvailable: 14 },
+      { ...NZ, flightNumber: 107, departHour: 14, cabin: "business", baseFare: 980, seatsAvailable: 4 },
+      { ...QF, flightNumber: 142, departHour: 10, cabin: "economy", baseFare: 224, seatsAvailable: 22 },
     ],
   },
   {
     origin: "AKL",
     destination: "MEL",
     durationMinutes: 265,
-    taxesMinor: 8_650,
-    carrierFeesMinor: 3_400,
+    taxes: 86.5,
+    carrierFees: 34,
     services: [
-      { ...NZ, flightNumber: 121, departHour: 9, cabin: "economy", baseFareMinor: 27_600, seatsAvailable: 19 },
-      { ...QF, flightNumber: 164, departHour: 15, cabin: "economy", baseFareMinor: 25_900, seatsAvailable: 12 },
+      { ...NZ, flightNumber: 121, departHour: 9, cabin: "economy", baseFare: 276, seatsAvailable: 19 },
+      { ...QF, flightNumber: 164, departHour: 15, cabin: "economy", baseFare: 259, seatsAvailable: 12 },
     ],
   },
   {
     origin: "AKL",
     destination: "BNE",
     durationMinutes: 210,
-    taxesMinor: 8_400,
-    carrierFeesMinor: 3_100,
+    taxes: 84,
+    carrierFees: 31,
     services: [
-      { ...NZ, flightNumber: 139, departHour: 11, cabin: "economy", baseFareMinor: 23_100, seatsAvailable: 21 },
+      { ...NZ, flightNumber: 139, departHour: 11, cabin: "economy", baseFare: 231, seatsAvailable: 21 },
     ],
   },
   {
     origin: "CHC",
     destination: "SYD",
     durationMinutes: 195,
-    taxesMinor: 8_650,
-    carrierFeesMinor: 3_000,
+    taxes: 86.5,
+    carrierFees: 30,
     services: [
-      { ...NZ, flightNumber: 537, departHour: 8, cabin: "economy", baseFareMinor: 21_800, seatsAvailable: 17 },
+      { ...NZ, flightNumber: 537, departHour: 8, cabin: "economy", baseFare: 218, seatsAvailable: 17 },
     ],
   },
 
@@ -181,20 +181,20 @@ const ROUTES: Route[] = [
     origin: "SYD",
     destination: "MEL",
     durationMinutes: 85,
-    taxesMinor: 4_200,
-    carrierFeesMinor: 2_100,
+    taxes: 42,
+    carrierFees: 21,
     services: [
-      { ...QF, flightNumber: 412, departHour: 7, cabin: "economy", baseFareMinor: 11_900, seatsAvailable: 48 },
+      { ...QF, flightNumber: 412, departHour: 7, cabin: "economy", baseFare: 119, seatsAvailable: 48 },
     ],
   },
   {
     origin: "SYD",
     destination: "PER",
     durationMinutes: 300,
-    taxesMinor: 5_600,
-    carrierFeesMinor: 2_600,
+    taxes: 56,
+    carrierFees: 26,
     services: [
-      { ...QF, flightNumber: 645, departHour: 9, cabin: "economy", baseFareMinor: 29_800, seatsAvailable: 23 },
+      { ...QF, flightNumber: 645, departHour: 9, cabin: "economy", baseFare: 298, seatsAvailable: 23 },
     ],
   },
 
@@ -203,20 +203,20 @@ const ROUTES: Route[] = [
     origin: "AKL",
     destination: "NAN",
     durationMinutes: 185,
-    taxesMinor: 11_200,
-    carrierFeesMinor: 4_800,
+    taxes: 112,
+    carrierFees: 48,
     services: [
-      { ...FJ, flightNumber: 410, departHour: 12, cabin: "economy", baseFareMinor: 33_500, seatsAvailable: 28 },
+      { ...FJ, flightNumber: 410, departHour: 12, cabin: "economy", baseFare: 335, seatsAvailable: 28 },
     ],
   },
   {
     origin: "AKL",
     destination: "RAR",
     durationMinutes: 240,
-    taxesMinor: 9_800,
-    carrierFeesMinor: 4_200,
+    taxes: 98,
+    carrierFees: 42,
     services: [
-      { ...NZ, flightNumber: 44, departHour: 14, cabin: "economy", baseFareMinor: 41_200, seatsAvailable: 15 },
+      { ...NZ, flightNumber: 44, departHour: 14, cabin: "economy", baseFare: 412, seatsAvailable: 15 },
     ],
   },
 
@@ -225,42 +225,42 @@ const ROUTES: Route[] = [
     origin: "AKL",
     destination: "SIN",
     durationMinutes: 620,
-    taxesMinor: 16_900,
-    carrierFeesMinor: 6_300,
+    taxes: 169,
+    carrierFees: 63,
     services: [
-      { ...SQ, flightNumber: 282, departHour: 12, cabin: "economy", baseFareMinor: 51_000, seatsAvailable: 19 },
-      { ...SQ, flightNumber: 286, departHour: 23, cabin: "business", baseFareMinor: 184_000, seatsAvailable: 3 },
+      { ...SQ, flightNumber: 282, departHour: 12, cabin: "economy", baseFare: 510, seatsAvailable: 19 },
+      { ...SQ, flightNumber: 286, departHour: 23, cabin: "business", baseFare: 1840, seatsAvailable: 3 },
     ],
   },
   {
     origin: "AKL",
     destination: "HKG",
     durationMinutes: 690,
-    taxesMinor: 17_400,
-    carrierFeesMinor: 6_600,
+    taxes: 174,
+    carrierFees: 66,
     services: [
-      { ...CX, flightNumber: 198, departHour: 22, cabin: "economy", baseFareMinor: 54_800, seatsAvailable: 25 },
-      { ...NZ, flightNumber: 87, departHour: 19, cabin: "premium", baseFareMinor: 96_500, seatsAvailable: 9 },
+      { ...CX, flightNumber: 198, departHour: 22, cabin: "economy", baseFare: 548, seatsAvailable: 25 },
+      { ...NZ, flightNumber: 87, departHour: 19, cabin: "premium", baseFare: 965, seatsAvailable: 9 },
     ],
   },
   {
     origin: "AKL",
     destination: "NRT",
     durationMinutes: 655,
-    taxesMinor: 15_800,
-    carrierFeesMinor: 6_100,
+    taxes: 158,
+    carrierFees: 61,
     services: [
-      { ...NZ, flightNumber: 99, departHour: 20, cabin: "economy", baseFareMinor: 57_300, seatsAvailable: 18 },
+      { ...NZ, flightNumber: 99, departHour: 20, cabin: "economy", baseFare: 573, seatsAvailable: 18 },
     ],
   },
   {
     origin: "SYD",
     destination: "SIN",
     durationMinutes: 480,
-    taxesMinor: 14_600,
-    carrierFeesMinor: 5_700,
+    taxes: 146,
+    carrierFees: 57,
     services: [
-      { ...SQ, flightNumber: 232, departHour: 13, cabin: "economy", baseFareMinor: 44_900, seatsAvailable: 30 },
+      { ...SQ, flightNumber: 232, departHour: 13, cabin: "economy", baseFare: 449, seatsAvailable: 30 },
     ],
   },
 
@@ -269,53 +269,53 @@ const ROUTES: Route[] = [
     origin: "AKL",
     destination: "LAX",
     durationMinutes: 760,
-    taxesMinor: 18_600,
-    carrierFeesMinor: 7_400,
+    taxes: 186,
+    carrierFees: 74,
     services: [
-      { ...NZ, flightNumber: 2, departHour: 19, cabin: "economy", baseFareMinor: 42_000, seatsAvailable: 31 },
-      { ...NZ, flightNumber: 6, departHour: 21, cabin: "premium", baseFareMinor: 89_500, seatsAvailable: 8 },
+      { ...NZ, flightNumber: 2, departHour: 19, cabin: "economy", baseFare: 420, seatsAvailable: 31 },
+      { ...NZ, flightNumber: 6, departHour: 21, cabin: "premium", baseFare: 895, seatsAvailable: 8 },
     ],
   },
   {
     origin: "AKL",
     destination: "SFO",
     durationMinutes: 730,
-    taxesMinor: 18_200,
-    carrierFeesMinor: 7_200,
+    taxes: 182,
+    carrierFees: 72,
     services: [
-      { ...NZ, flightNumber: 8, departHour: 20, cabin: "economy", baseFareMinor: 44_600, seatsAvailable: 22 },
-      { ...UA, flightNumber: 916, departHour: 18, cabin: "economy", baseFareMinor: 46_900, seatsAvailable: 27 },
+      { ...NZ, flightNumber: 8, departHour: 20, cabin: "economy", baseFare: 446, seatsAvailable: 22 },
+      { ...UA, flightNumber: 916, departHour: 18, cabin: "economy", baseFare: 469, seatsAvailable: 27 },
     ],
   },
   {
     origin: "AKL",
     destination: "YVR",
     durationMinutes: 800,
-    taxesMinor: 17_900,
-    carrierFeesMinor: 7_000,
+    taxes: 179,
+    carrierFees: 70,
     services: [
-      { ...NZ, flightNumber: 22, departHour: 17, cabin: "economy", baseFareMinor: 48_300, seatsAvailable: 20 },
+      { ...NZ, flightNumber: 22, departHour: 17, cabin: "economy", baseFare: 483, seatsAvailable: 20 },
     ],
   },
   {
     origin: "SYD",
     destination: "LAX",
     durationMinutes: 840,
-    taxesMinor: 19_400,
-    carrierFeesMinor: 7_800,
+    taxes: 194,
+    carrierFees: 78,
     services: [
-      { ...QF, flightNumber: 11, departHour: 10, cabin: "economy", baseFareMinor: 51_500, seatsAvailable: 26 },
+      { ...QF, flightNumber: 11, departHour: 10, cabin: "economy", baseFare: 515, seatsAvailable: 26 },
     ],
   },
   {
     origin: "AKL",
     destination: "LHR",
     durationMinutes: 1_500,
-    taxesMinor: 31_000,
-    carrierFeesMinor: 9_800,
+    taxes: 310,
+    carrierFees: 98,
     services: [
-      { ...NZ, flightNumber: 16, departHour: 16, cabin: "economy", baseFareMinor: 128_900, seatsAvailable: 12 },
-      { ...NZ, flightNumber: 18, departHour: 13, cabin: "business", baseFareMinor: 412_000, seatsAvailable: 2 },
+      { ...NZ, flightNumber: 16, departHour: 16, cabin: "economy", baseFare: 1289, seatsAvailable: 12 },
+      { ...NZ, flightNumber: 18, departHour: 13, cabin: "business", baseFare: 4120, seatsAvailable: 2 },
     ],
   },
 ];
@@ -331,8 +331,8 @@ function reverseOf(route: Route): Route {
     origin: route.destination,
     destination: route.origin,
     durationMinutes: route.durationMinutes,
-    taxesMinor: route.taxesMinor,
-    carrierFeesMinor: route.carrierFeesMinor,
+    taxes: route.taxes,
+    carrierFees: route.carrierFees,
     services: route.services.map((service) => ({
       ...service,
       flightNumber: service.flightNumber + 1,
@@ -381,11 +381,11 @@ export function seed(db: Db): void {
   db.insert(organisations)
     .values([
       // Large negotiated rate. Makes the discount basis visible in the UI.
-      { id: "org-kahu", name: "Kahu Logistics", negotiatedDiscountBps: 1_200 },
-      { id: "org-northwind", name: "Northwind Freight", negotiatedDiscountBps: 500 },
-      { id: "org-harbourline", name: "Harbourline Legal", negotiatedDiscountBps: 750 },
+      { id: "org-kahu", name: "Kahu Logistics", negotiatedDiscountPercent: 12 },
+      { id: "org-northwind", name: "Northwind Freight", negotiatedDiscountPercent: 5 },
+      { id: "org-harbourline", name: "Harbourline Legal", negotiatedDiscountPercent: 7.5 },
       // No corporate deal. Useful for checking the zero-discount path.
-      { id: "org-tuatara", name: "Tuatara Studios", negotiatedDiscountBps: 0 },
+      { id: "org-tuatara", name: "Tuatara Studios", negotiatedDiscountPercent: 0 },
     ])
     .run();
 
@@ -450,9 +450,9 @@ export function seed(db: Db): void {
           arriveAt: isoAt(date, service.departHour, route.durationMinutes),
           cabin: service.cabin,
           currency: CURRENCY,
-          baseFareMinor: service.baseFareMinor,
-          taxesMinor: route.taxesMinor,
-          carrierFeesMinor: route.carrierFeesMinor,
+          baseFare: service.baseFare,
+          taxes: route.taxes,
+          carrierFees: route.carrierFees,
           seatsAvailable: service.seatsAvailable,
         });
       }

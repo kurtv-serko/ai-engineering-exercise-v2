@@ -35,6 +35,6 @@ export function formatDuration(departAt: string, arriveAt: string): string {
   return `${hours}h ${remainingMinutes.toString().padStart(2, "0")}m`;
 }
 
-export function formatBps(bps: number): string {
-  return `${(bps / 100).toLocaleString("en-NZ", { maximumFractionDigits: 2 })}%`;
+export function formatPercent(percent: number): string {
+  return `${percent.toLocaleString("en-NZ", { maximumFractionDigits: 2 })}%`;
 }

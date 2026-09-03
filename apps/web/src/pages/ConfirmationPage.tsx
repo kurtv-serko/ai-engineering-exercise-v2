@@ -38,7 +38,7 @@ export function ConfirmationPage({
         </div>
         <div>
           <dt>Amount paid</dt>
-          <dd>{formatMoney(booking.payableMinor, booking.currency)}</dd>
+          <dd>{formatMoney(booking.payable, booking.currency)}</dd>
         </div>
       </dl>
 

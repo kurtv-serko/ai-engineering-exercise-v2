@@ -49,36 +49,36 @@
  *   6. A refund never exceeds the amount paid, and is never negative.
  */
 
-import { clampToZero, percentageOf } from "@farepath/shared";
+import { clampToZero, percentOf } from "@farepath/shared";
 
 /** The priced components a rule needs. Deliberately not the whole quote row. */
 export interface PricedItinerary {
-  baseFareMinor: number;
-  taxesMinor: number;
-  carrierFeesMinor: number;
+  baseFare: number;
+  taxes: number;
+  carrierFees: number;
 }
 
 /** Gross of any reduction. */
 export function grossTotal(itinerary: PricedItinerary): number {
-  return itinerary.baseFareMinor + itinerary.taxesMinor + itinerary.carrierFeesMinor;
+  return itinerary.baseFare + itinerary.taxes + itinerary.carrierFees;
 }
 
 /** The pass-through component, which no discount may touch. See D1. */
 export function passThroughTotal(itinerary: PricedItinerary): number {
-  return itinerary.taxesMinor + itinerary.carrierFeesMinor;
+  return itinerary.taxes + itinerary.carrierFees;
 }
 
 /**
  * The only amount a promotion or negotiated rate is permitted to reduce.
  *
- * See invariant D1. `alreadyReducedMinor` lets reductions compose against what
- * is left rather than against the list base fare — see invariant D3.
+ * See invariant D1. `alreadyReduced` lets reductions compose against what is
+ * left rather than against the list base fare — see invariant D3.
  */
 export function discountableBasis(
   itinerary: PricedItinerary,
-  alreadyReducedMinor = 0,
+  alreadyReduced = 0,
 ): number {
-  return clampToZero(itinerary.baseFareMinor - alreadyReducedMinor);
+  return clampToZero(itinerary.baseFare - alreadyReduced);
 }
 
 /**
@@ -89,33 +89,31 @@ export function discountableBasis(
  */
 export function capReduction(
   itinerary: PricedItinerary,
-  proposedMinor: number,
-  alreadyReducedMinor = 0,
+  proposed: number,
+  alreadyReduced = 0,
 ): number {
-  return clampToZero(
-    Math.min(proposedMinor, discountableBasis(itinerary, alreadyReducedMinor)),
-  );
+  return clampToZero(Math.min(proposed, discountableBasis(itinerary, alreadyReduced)));
 }
 
 /** Payable total after a reduction, respecting invariants D1 and D2. */
 export function applyReduction(
   itinerary: PricedItinerary,
-  reductionMinor: number,
-  alreadyReducedMinor = 0,
+  reduction: number,
+  alreadyReduced = 0,
 ): number {
-  const capped = capReduction(itinerary, reductionMinor, alreadyReducedMinor);
-  return clampToZero(grossTotal(itinerary) - alreadyReducedMinor - capped);
+  const capped = capReduction(itinerary, reduction, alreadyReduced);
+  return clampToZero(grossTotal(itinerary) - alreadyReduced - capped);
 }
 
 /**
- * The contractual corporate rate for an organisation, in minor units.
+ * The contractual corporate rate for an organisation.
  *
  * Applied first, before anything discretionary. See invariant D3.
  */
 export function negotiatedReduction(
   itinerary: PricedItinerary,
-  negotiatedDiscountBps: number,
+  negotiatedDiscountPercent: number,
 ): number {
-  const proposed = percentageOf(discountableBasis(itinerary), negotiatedDiscountBps);
+  const proposed = percentOf(discountableBasis(itinerary), negotiatedDiscountPercent);
   return capReduction(itinerary, proposed);
 }

@@ -20,9 +20,9 @@ describe("createQuote", () => {
       now: FIXED_NOW,
     });
 
-    expect(quote.baseFareMinor).toBe(42_000);
-    expect(quote.taxesMinor).toBe(18_600);
-    expect(quote.carrierFeesMinor).toBe(7_400);
+    expect(quote.baseFare).toBe(420);
+    expect(quote.taxes).toBe(186);
+    expect(quote.carrierFees).toBe(74);
   });
 
   it("applies the corporate rate to the base fare only", async () => {
@@ -32,10 +32,10 @@ describe("createQuote", () => {
       now: FIXED_NOW,
     });
 
-    // 12% of 42000 = 5040. If this were computed on the 68000 gross it would
-    // be 8160, and we would be refunding tax we have to remit in full.
-    expect(quote.negotiatedReductionMinor).toBe(5_040);
-    expect(quote.payableMinor).toBe(62_960);
+    // 12% of 420 = 50.4. If this were computed on the 680 gross it would be
+    // 81.6, and we would be refunding tax we have to remit in full.
+    expect(quote.negotiatedReduction).toBe(50.4);
+    expect(quote.payable).toBe(629.6);
   });
 
   it("leaves the payable equal to the gross when there is no deal", async () => {
@@ -45,8 +45,8 @@ describe("createQuote", () => {
       now: FIXED_NOW,
     });
 
-    expect(quote.negotiatedReductionMinor).toBe(0);
-    expect(quote.payableMinor).toBe(68_000);
+    expect(quote.negotiatedReduction).toBe(0);
+    expect(quote.payable).toBe(680);
   });
 
   it("never discounts the pass-through component", async () => {
@@ -56,8 +56,8 @@ describe("createQuote", () => {
       now: FIXED_NOW,
     });
 
-    const passThrough = quote.taxesMinor + quote.carrierFeesMinor;
-    expect(quote.payableMinor).toBeGreaterThanOrEqual(passThrough);
+    const passThrough = quote.taxes + quote.carrierFees;
+    expect(quote.payable).toBeGreaterThanOrEqual(passThrough);
   });
 
   it("expires the quote after the TTL", async () => {

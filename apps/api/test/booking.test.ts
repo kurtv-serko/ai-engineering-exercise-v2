@@ -33,8 +33,8 @@ describe("confirmBooking", () => {
     const quote = await quoteFor(IDS.longHaulFare);
     const { booking } = await confirmBooking(db, { quoteId: quote.id, now: FIXED_NOW });
 
-    expect(booking.payableMinor).toBe(quote.payableMinor);
-    expect(booking.payableMinor).toBe(62_960);
+    expect(booking.payable).toBe(quote.payable);
+    expect(booking.payable).toBe(629.6);
     expect(booking.status).toBe("confirmed");
   });
 

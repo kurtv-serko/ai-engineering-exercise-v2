@@ -24,9 +24,9 @@ export const IDS = {
   orgTuatara: "org-tuatara",
   travellerWithDeal: "trv-mereana",
   travellerNoDeal: "trv-sam",
-  /** Long haul: base 42000, taxes 18600, fees 7400, gross 68000. */
+  /** Long haul: base 420, taxes 186, fees 74, gross 680. */
   longHaulFare: "fare-longhaul",
-  /** Domestic: base 8900, taxes 1100, fees 900, gross 10900. */
+  /** Domestic: base 89, taxes 11, fees 9, gross 109. */
   domesticFare: "fare-domestic",
   /** Long haul with exactly one seat left. */
   lastSeatFare: "fare-lastseat",
@@ -38,8 +38,8 @@ export function makeTestDb(): Db {
 
   db.insert(organisations)
     .values([
-      { id: IDS.orgKahu, name: "Kahu Logistics", negotiatedDiscountBps: 1_200 },
-      { id: IDS.orgTuatara, name: "Tuatara Studios", negotiatedDiscountBps: 0 },
+      { id: IDS.orgKahu, name: "Kahu Logistics", negotiatedDiscountPercent: 12 },
+      { id: IDS.orgTuatara, name: "Tuatara Studios", negotiatedDiscountPercent: 0 },
     ])
     .run();
 
@@ -73,9 +73,9 @@ export function makeTestDb(): Db {
         arriveAt: "2026-03-11T07:40:00.000Z",
         cabin: "economy",
         currency: "NZD",
-        baseFareMinor: 42_000,
-        taxesMinor: 18_600,
-        carrierFeesMinor: 7_400,
+        baseFare: 420,
+        taxes: 186,
+        carrierFees: 74,
         seatsAvailable: 31,
       },
       {
@@ -89,9 +89,9 @@ export function makeTestDb(): Db {
         arriveAt: "2026-03-10T07:05:00.000Z",
         cabin: "economy",
         currency: "NZD",
-        baseFareMinor: 8_900,
-        taxesMinor: 1_100,
-        carrierFeesMinor: 900,
+        baseFare: 89,
+        taxes: 11,
+        carrierFees: 9,
         seatsAvailable: 40,
       },
       {
@@ -105,9 +105,9 @@ export function makeTestDb(): Db {
         arriveAt: "2026-03-11T09:15:00.000Z",
         cabin: "business",
         currency: "NZD",
-        baseFareMinor: 184_000,
-        taxesMinor: 24_800,
-        carrierFeesMinor: 11_200,
+        baseFare: 1840,
+        taxes: 248,
+        carrierFees: 112,
         seatsAvailable: 1,
       },
     ])
