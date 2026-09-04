@@ -44,6 +44,15 @@ export const fares = sqliteTable("fares", {
   seatsAvailable: integer("seats_available").notNull(),
 });
 
+export const promotions = sqliteTable("promotions", {
+  code: text("code").primaryKey(),
+  kind: text("kind").$type<"percentage" | "fixed">().notNull(),
+  /** A plain percentage for a percentage promotion, decimal dollars for a fixed one. */
+  value: real("value").notNull(),
+  currency: text("currency").$type<"NZD" | "AUD" | "USD" | "GBP">(),
+  active: integer("active").notNull().default(1),
+});
+
 export const quotes = sqliteTable("quotes", {
   id: text("id").primaryKey(),
   fareId: text("fare_id")
@@ -57,6 +66,8 @@ export const quotes = sqliteTable("quotes", {
   taxes: real("taxes").notNull(),
   carrierFees: real("carrier_fees").notNull(),
   negotiatedReduction: real("negotiated_reduction").notNull().default(0),
+  promotionCode: text("promotion_code"),
+  promotionReduction: real("promotion_reduction").notNull().default(0),
   payable: real("payable").notNull(),
   createdAt: text("created_at").notNull(),
   expiresAt: text("expires_at").notNull(),
@@ -75,6 +86,7 @@ export const bookings = sqliteTable("bookings", {
 });
 
 export type OrganisationRow = typeof organisations.$inferSelect;
+export type PromotionRow = typeof promotions.$inferSelect;
 export type TravellerRow = typeof travellers.$inferSelect;
 export type FareRow = typeof fares.$inferSelect;
 export type QuoteRow = typeof quotes.$inferSelect;

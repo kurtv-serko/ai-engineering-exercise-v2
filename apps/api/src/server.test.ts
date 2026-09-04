@@ -138,6 +138,50 @@ describe("POST /api/quotes", () => {
   });
 });
 
+describe("POST /api/quotes/:id/promotion", () => {
+  async function quoteThenPromote(code: string) {
+    const quoteRes = await app.inject({
+      method: "POST",
+      url: "/api/quotes",
+      payload: { fareId: IDS.longHaulFare, travellerId: IDS.travellerWithDeal },
+    });
+    const quoteId = quoteRes.json().id;
+
+    return app.inject({
+      method: "POST",
+      url: `/api/quotes/${quoteId}/promotion`,
+      payload: { code },
+    });
+  }
+
+  it("applies a percentage promotion", async () => {
+    const res = await quoteThenPromote("KIWI20");
+
+    expect(res.statusCode).toBe(200);
+    const quote = res.json();
+    expect(quote.promotionCode).toBe("KIWI20");
+    expect(quote.promotionReduction).toBe(136);
+    expect(quote.payable).toBe(493.6);
+  });
+
+  it("applies a fixed promotion", async () => {
+    const res = await quoteThenPromote("WINTER50");
+
+    expect(res.statusCode).toBe(200);
+    expect(res.json().promotionReduction).toBe(50);
+  });
+
+  it("is case insensitive", async () => {
+    const res = await quoteThenPromote("kiwi20");
+    expect(res.json().promotionCode).toBe("KIWI20");
+  });
+
+  it("400s an empty code", async () => {
+    const res = await quoteThenPromote("");
+    expect(res.statusCode).toBe(400);
+  });
+});
+
 describe("booking round trip", () => {
   async function quoteThenBook(travellerId: string, fareId: string = IDS.longHaulFare) {
     const quoteRes = await app.inject({

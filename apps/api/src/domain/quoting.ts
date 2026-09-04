@@ -76,6 +76,8 @@ export async function createQuote(db: Db, input: CreateQuoteInput) {
     taxes: itinerary.taxes,
     carrierFees: itinerary.carrierFees,
     negotiatedReduction: negotiated,
+    promotionCode: null,
+    promotionReduction: 0,
     payable,
     createdAt: now.toISOString(),
     expiresAt: expiresAt.toISOString(),

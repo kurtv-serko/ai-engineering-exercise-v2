@@ -61,6 +61,8 @@ export function toQuoteView(
     carrierFees: quote.carrierFees,
     total: grossTotal(quote),
     negotiatedReduction: quote.negotiatedReduction,
+    promotionCode: quote.promotionCode,
+    promotionReduction: quote.promotionReduction,
     payable: quote.payable,
     createdAt: quote.createdAt,
     expiresAt: quote.expiresAt,

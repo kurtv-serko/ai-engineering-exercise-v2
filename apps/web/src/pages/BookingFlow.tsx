@@ -119,6 +119,7 @@ export function BookingFlow({ travellers, network, onViewBookings }: BookingFlow
       return (
         <QuotePage
           quote={step.quote}
+          onQuoteUpdated={(quote) => setStep({ ...step, quote })}
           onConfirmed={(booking) => setStep({ name: "confirmed", booking })}
           onBack={handleBackToResults}
         />
