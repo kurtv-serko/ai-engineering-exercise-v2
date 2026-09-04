@@ -1,22 +1,47 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 
 import { formatMoney } from "@farepath/shared";
 import type { BookingView, QuoteView } from "@farepath/shared";
 
-import { confirmBooking } from "../api/client.js";
+import { applyPromotion, confirmBooking } from "../api/client.js";
 import { describeError } from "../hooks/useAsync.js";
 import { formatPercent, formatDateTime } from "../format.js";
 import { StatusMessage } from "../components/StatusMessage.js";
 
 interface QuotePageProps {
   quote: QuoteView;
+  onQuoteUpdated: (quote: QuoteView) => void;
   onConfirmed: (booking: BookingView) => void;
   onBack: () => void;
 }
 
-export function QuotePage({ quote, onConfirmed, onBack }: QuotePageProps) {
+export function QuotePage({
+  quote,
+  onQuoteUpdated,
+  onConfirmed,
+  onBack,
+}: QuotePageProps) {
   const [confirming, setConfirming] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [promoCode, setPromoCode] = useState("");
+  const [applyingPromo, setApplyingPromo] = useState(false);
+
+  async function handleApplyPromotion(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!promoCode.trim()) return;
+
+    setApplyingPromo(true);
+    setError(null);
+    try {
+      const updated = await applyPromotion(quote.id, { code: promoCode });
+      onQuoteUpdated(updated);
+      setPromoCode("");
+    } catch (err) {
+      setError(describeError(err));
+    } finally {
+      setApplyingPromo(false);
+    }
+  }
 
   async function handleConfirm() {
     setConfirming(true);
@@ -92,12 +117,43 @@ export function QuotePage({ quote, onConfirmed, onBack }: QuotePageProps) {
             </th>
             <td>{formatMoney(quote.carrierFees, currency)}</td>
           </tr>
+          {quote.promotionCode && (
+            <tr className="price-table__reduction">
+              <th scope="row">Promotion {quote.promotionCode}</th>
+              <td>−{formatMoney(quote.promotionReduction, currency)}</td>
+            </tr>
+          )}
           <tr className="price-table__payable">
             <th scope="row">Payable total</th>
             <td>{formatMoney(quote.payable, currency)}</td>
           </tr>
         </tbody>
       </table>
+
+      <form className="promo-form" onSubmit={handleApplyPromotion}>
+        <label className="promo-form__label" htmlFor="promo-code">
+          Promotion code
+        </label>
+        <div className="promo-form__row">
+          <input
+            id="promo-code"
+            name="promo-code"
+            type="text"
+            autoComplete="off"
+            value={promoCode}
+            onChange={(event) => setPromoCode(event.target.value)}
+            placeholder="e.g. KIWI20"
+          />
+          <button type="submit" className="button" disabled={applyingPromo}>
+            {applyingPromo ? "Applying…" : "Apply"}
+          </button>
+        </div>
+        {quote.promotionCode && (
+          <p className="promo-form__applied">
+            Promotion {quote.promotionCode} applied.
+          </p>
+        )}
+      </form>
 
       <p className="quote-expiry">Quote expires at {formatDateTime(quote.expiresAt)}.</p>
 

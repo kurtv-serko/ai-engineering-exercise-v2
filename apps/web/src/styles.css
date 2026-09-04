@@ -461,3 +461,53 @@ h3 {
     overflow-x: auto;
   }
 }
+
+.promo-form {
+  max-width: 520px;
+  margin-bottom: 16px;
+}
+
+.promo-form__label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.promo-form__row {
+  display: flex;
+  gap: 8px;
+}
+
+.promo-form__row input {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.promo-form__row .button {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.promo-form__row .button:hover:not(:disabled) {
+  background: var(--color-bg);
+}
+
+.promo-form__row .button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.promo-form__applied {
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+  color: var(--color-primary);
+}

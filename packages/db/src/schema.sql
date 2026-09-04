@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS quotes;
 DROP TABLE IF EXISTS fares;
 DROP TABLE IF EXISTS travellers;
 DROP TABLE IF EXISTS organisations;
+DROP TABLE IF EXISTS promotions;
 
 CREATE TABLE organisations (
   id                           TEXT PRIMARY KEY,
@@ -44,6 +45,15 @@ CREATE TABLE fares (
 
 CREATE INDEX fares_route_idx ON fares (origin, destination, depart_at);
 
+CREATE TABLE promotions (
+  code     TEXT PRIMARY KEY,
+  kind     TEXT NOT NULL CHECK (kind IN ('percentage', 'fixed')),
+  -- A plain percentage for a percentage promotion, decimal dollars for a fixed one.
+  value    REAL NOT NULL,
+  currency TEXT,
+  active   INTEGER NOT NULL DEFAULT 1
+);
+
 CREATE TABLE quotes (
   id                   TEXT PRIMARY KEY,
   fare_id              TEXT NOT NULL REFERENCES fares (id),
@@ -53,6 +63,8 @@ CREATE TABLE quotes (
   taxes                REAL NOT NULL,
   carrier_fees         REAL NOT NULL,
   negotiated_reduction REAL NOT NULL DEFAULT 0,
+  promotion_code       TEXT,
+  promotion_reduction  REAL NOT NULL DEFAULT 0,
   payable              REAL NOT NULL,
   created_at           TEXT NOT NULL,
   expires_at           TEXT NOT NULL

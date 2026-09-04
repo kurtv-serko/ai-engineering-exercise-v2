@@ -10,6 +10,7 @@ import {
   createDb,
   fares,
   organisations,
+  promotions,
   travellers,
   type Db,
 } from "@farepath/db";
@@ -110,6 +111,14 @@ export function makeTestDb(): Db {
         carrierFees: 112,
         seatsAvailable: 1,
       },
+    ])
+    .run();
+
+  db.insert(promotions)
+    .values([
+      { code: "KIWI20", kind: "percentage", value: 20, currency: null, active: 1 },
+      { code: "WINTER50", kind: "fixed", value: 50, currency: "NZD", active: 1 },
+      { code: "EXPIRED99", kind: "percentage", value: 99, currency: null, active: 0 },
     ])
     .run();
 
