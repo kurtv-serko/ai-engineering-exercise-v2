@@ -38,12 +38,17 @@ apps/
                                   changing anything that moves money
     src/domain/quoting.ts         fare search and quote creation
     src/domain/booking.ts         booking confirmation
-    test/                         vitest, incl. fixtures in test/support
+    src/server.ts                 the HTTP routes
+    src/testing/                  shared fixtures and the in-memory test db
   web/        React + Vite client
 packages/
   shared/     wire contracts and money primitives shared by api and web
   db/         Drizzle schema, physical schema.sql, and the dev seed
 ```
+
+**Tests sit next to the code they test**, named after it: `rules.ts` is tested
+by `rules.test.ts` in the same directory. They are excluded from the build and
+typechecked separately by `tsconfig.test.json`, which `pnpm typecheck` runs.
 
 ## Things worth knowing
 

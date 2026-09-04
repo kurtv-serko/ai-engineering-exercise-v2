@@ -7,15 +7,15 @@ import {
   confirmBooking,
   findBookingByReference,
   listBookings,
-} from "../src/domain/booking.js";
-import { createQuote } from "../src/domain/quoting.js";
+} from "./booking.js";
+import { createQuote } from "./quoting.js";
 import {
   NoSeatsError,
   NotFoundError,
   QuoteAlreadyBookedError,
   QuoteExpiredError,
-} from "../src/errors.js";
-import { FIXED_NOW, IDS, makeTestDb } from "./support/harness.js";
+} from "../errors.js";
+import { FIXED_NOW, IDS, makeTestDb } from "../testing/harness.js";
 
 let db: Db;
 
@@ -23,7 +23,7 @@ beforeEach(() => {
   db = makeTestDb();
 });
 
-async function quoteFor(fareId: string, travellerId = IDS.travellerWithDeal) {
+async function quoteFor(fareId: string, travellerId: string = IDS.travellerWithDeal) {
   const { quote } = await createQuote(db, { fareId, travellerId, now: FIXED_NOW });
   return quote;
 }

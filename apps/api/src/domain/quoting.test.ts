@@ -2,9 +2,9 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import type { Db } from "@farepath/db";
 
-import { NotFoundError } from "../src/errors.js";
-import { createQuote, QUOTE_TTL_MINUTES, searchFares } from "../src/domain/quoting.js";
-import { FIXED_NOW, IDS, makeTestDb } from "./support/harness.js";
+import { NotFoundError } from "../errors.js";
+import { createQuote, QUOTE_TTL_MINUTES, searchFares } from "./quoting.js";
+import { FIXED_NOW, IDS, makeTestDb } from "../testing/harness.js";
 
 let db: Db;
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { clampToZero, formatMoney, percentOf, roundMoney } from "../src/money.js";
+import { clampToZero, formatMoney, percentOf, roundMoney } from "./money.js";
 
 describe("roundMoney", () => {
   it("rounds to the nearest cent", () => {

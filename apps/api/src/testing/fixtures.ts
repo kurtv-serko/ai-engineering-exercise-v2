@@ -7,7 +7,7 @@
  * or totals.
  */
 
-import type { PricedItinerary } from "../../src/domain/pricing/rules.js";
+import type { PricedItinerary } from "../domain/pricing/rules.js";
 
 /**
  * A realistic long haul fare. Taxes and carrier fees are 38% of the ticket.

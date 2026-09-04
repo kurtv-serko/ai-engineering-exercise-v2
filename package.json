@@ -11,7 +11,7 @@
     "build": "pnpm --filter @farepath/shared build && pnpm --filter @farepath/api build && pnpm --filter @farepath/web build",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --build --force",
+    "typecheck": "tsc --build --force && tsc -p tsconfig.test.json",
     "db:reset": "pnpm --filter @farepath/db reset"
   },
   "devDependencies": {

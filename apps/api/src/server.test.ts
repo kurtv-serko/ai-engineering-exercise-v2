@@ -5,8 +5,8 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { Db } from "@farepath/db";
 import type { FastifyInstance } from "fastify";
 
-import { buildServer } from "../src/server.js";
-import { IDS, makeTestDb } from "./support/harness.js";
+import { buildServer } from "./server.js";
+import { IDS, makeTestDb } from "./testing/harness.js";
 
 let db: Db;
 let app: FastifyInstance;
@@ -139,7 +139,7 @@ describe("POST /api/quotes", () => {
 });
 
 describe("booking round trip", () => {
-  async function quoteThenBook(travellerId: string, fareId = IDS.longHaulFare) {
+  async function quoteThenBook(travellerId: string, fareId: string = IDS.longHaulFare) {
     const quoteRes = await app.inject({
       method: "POST",
       url: "/api/quotes",

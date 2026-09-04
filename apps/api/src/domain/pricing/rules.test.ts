@@ -8,8 +8,8 @@ import {
   grossTotal,
   negotiatedReduction,
   passThroughTotal,
-} from "../src/domain/pricing/rules.js";
-import { domestic, longHaul, taxFree } from "./support/fixtures.js";
+} from "./rules.js";
+import { domestic, longHaul, taxFree } from "../../testing/fixtures.js";
 
 describe("grossTotal", () => {
   it("sums the three components", () => {
