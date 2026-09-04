@@ -16,6 +16,7 @@ import {
   findBookingByReference,
   listBookings,
 } from "./domain/booking.js";
+import { applyPromotion } from "./domain/promotions/apply.js";
 import { createQuote, findQuote, searchFares } from "./domain/quoting.js";
 import { DomainError, ValidationError } from "./errors.js";
 import { toBookingView, toFareView, toQuoteView, toTravellerView } from "./mappers.js";
@@ -34,6 +35,10 @@ const createQuoteSchema = z.object({
 
 const confirmBookingSchema = z.object({
   quoteId: z.string().min(1),
+});
+
+const applyPromotionSchema = z.object({
+  code: z.string().trim().min(1, "code must not be empty"),
 });
 
 export interface BuildServerOptions {
@@ -116,6 +121,28 @@ export function buildServer({ db, logger = false }: BuildServerOptions): Fastify
     const result = await findQuote(db, request.params.id);
     return toQuoteView(result.quote, result.fare, result.traveller, result.organisation);
   });
+
+  app.post<{ Params: { id: string } }>(
+    "/api/quotes/:id/promotion",
+    async (request) => {
+      const parsed = applyPromotionSchema.safeParse(request.body);
+      if (!parsed.success) {
+        throw new ValidationError(parsed.error.issues.map((i) => i.message).join("; "));
+      }
+
+      const result = await applyPromotion(db, {
+        quoteId: request.params.id,
+        code: parsed.data.code,
+      });
+
+      return toQuoteView(
+        result.quote,
+        result.fare,
+        result.traveller,
+        result.organisation,
+      );
+    },
+  );
 
   app.post("/api/bookings", async (request, reply) => {
     const parsed = confirmBookingSchema.safeParse(request.body);

@@ -16,6 +16,7 @@ import {
   bookings,
   fares,
   organisations,
+  promotions,
   quotes,
   travellers,
 } from "./schema.js";
@@ -377,6 +378,18 @@ export function seed(db: Db): void {
   db.delete(fares).run();
   db.delete(travellers).run();
   db.delete(organisations).run();
+  db.delete(promotions).run();
+
+  db.insert(promotions)
+    .values([
+      { code: "KIWI20", kind: "percentage", value: 20, currency: null, active: 1 },
+      { code: "AUTUMN10", kind: "percentage", value: 10, currency: null, active: 1 },
+      { code: "WINTER50", kind: "fixed", value: 50, currency: "NZD", active: 1 },
+      // Marketing's Black Friday voucher. Larger than some domestic fares.
+      { code: "ESCAPE200", kind: "fixed", value: 200, currency: "NZD", active: 1 },
+      { code: "EXPIRED99", kind: "percentage", value: 99, currency: null, active: 0 },
+    ])
+    .run();
 
   db.insert(organisations)
     .values([

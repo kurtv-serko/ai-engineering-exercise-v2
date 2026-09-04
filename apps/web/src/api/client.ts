@@ -7,6 +7,7 @@
 
 import type {
   ApiErrorBody,
+  ApplyPromotionRequest,
   BookingView,
   ConfirmBookingRequest,
   CreateQuoteRequest,
@@ -87,4 +88,14 @@ export function confirmBooking(body: ConfirmBookingRequest): Promise<BookingView
 
 export function fetchBookings(): Promise<BookingView[]> {
   return request<BookingView[]>("/api/bookings");
+}
+
+export function applyPromotion(
+  quoteId: string,
+  body: ApplyPromotionRequest,
+): Promise<QuoteView> {
+  return request<QuoteView>(`/api/quotes/${quoteId}/promotion`, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
 }

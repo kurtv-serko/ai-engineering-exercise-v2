@@ -74,6 +74,10 @@ export interface QuoteView {
   total: number;
   /** Corporate negotiated rate. Reduces the base fare only — see invariant D1. */
   negotiatedReduction: number;
+  /** The promotion code applied to this quote, if any. */
+  promotionCode: string | null;
+  /** The reduction that promotion produced. */
+  promotionReduction: number;
   /** What the traveller actually pays. */
   payable: number;
   createdAt: string;
@@ -102,6 +106,10 @@ export interface FareSearchQuery {
 export interface CreateQuoteRequest {
   fareId: string;
   travellerId: string;
+}
+
+export interface ApplyPromotionRequest {
+  code: string;
 }
 
 export interface ConfirmBookingRequest {
