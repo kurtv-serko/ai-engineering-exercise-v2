@@ -39,7 +39,7 @@ apps/
     src/domain/quoting.ts         fare search and quote creation
     src/domain/booking.ts         booking confirmation
     src/server.ts                 the HTTP routes
-    src/testing/                  shared fixtures and the in-memory test db
+    src/testing/harness.ts        the in-memory database used by the tests
   web/        React + Vite client
 packages/
   shared/     wire contracts and money primitives shared by api and web
@@ -47,8 +47,9 @@ packages/
 ```
 
 **Tests sit next to the code they test**, named after it: `rules.ts` is tested
-by `rules.test.ts` in the same directory. They are excluded from the build and
-typechecked separately by `tsconfig.test.json`, which `pnpm typecheck` runs.
+by `rules.test.ts` in the same directory, and each test file declares its own
+test data rather than importing shared fixtures. Tests are excluded from the
+build and typechecked by `tsconfig.test.json`, which `pnpm typecheck` runs.
 
 ## Things worth knowing
 
